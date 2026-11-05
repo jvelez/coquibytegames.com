@@ -1,0 +1,434 @@
+/* Coquibyte Games: styled after coquibytegames.itch.io (white page, navy ink, sky-blue links, Lato, pixel wordmark, gold coquí).
+   Layout: one centered column; games as a shelf of 3D boxes. */
+
+/* FONTS, served from the site itself (src/fonts, the Latin subsets of Google Fonts' files; both are under the SIL Open Font License) */
+@font-face{font-family:"Lato";font-style:normal;font-weight:400;font-display:swap;src:url(../fonts/lato-400.woff2) format("woff2")}
+@font-face{font-family:"Lato";font-style:normal;font-weight:700;font-display:swap;src:url(../fonts/lato-700.woff2) format("woff2")}
+@font-face{font-family:"Lato";font-style:normal;font-weight:900;font-display:swap;src:url(../fonts/lato-900.woff2) format("woff2")}
+@font-face{font-family:"Silkscreen";font-style:normal;font-weight:400;font-display:swap;src:url(../fonts/silkscreen-400.woff2) format("woff2")}
+@font-face{font-family:"Silkscreen";font-style:normal;font-weight:700;font-display:swap;src:url(../fonts/silkscreen-700.woff2) format("woff2")}
+
+:root{
+  --bg:#ffffff;
+  --surface:#f1f3f8;
+  --fg:#253c77;
+  --muted:#5c6d99;
+  --faint:#7f8bb0;
+  --line:#d9deea;
+  --accent:#1f8cbf;
+  --accent-ink:#ffffff;
+  --sun:#f5c024;
+  --ui:#5b6176;
+  --shadow:rgba(37,60,119,.22);
+  --tag-out:#2f9e6a; --tag-soon:#c96a12; --tag-dev:#6a5bc4;
+  --radius:14px;
+  --body:"Lato", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --pixel:"Silkscreen", "Courier New", monospace;
+}
+/* Night: the system's dark setting, or chosen with the Day/Night button (head.html sets data-theme before the page draws) */
+:root[data-theme="dark"]{
+  --bg:#0f1733; --surface:#18234a; --fg:#e4eaff; --muted:#aab6dc; --faint:#8592bb; --line:#2a3766;
+  --accent:#5cc3ef; --accent-ink:#0f1733; --sun:#f7c948; --ui:#2a3766; --shadow:rgba(0,0,0,.45);
+  --tag-out:#4cc98c; --tag-soon:#f0a25a; --tag-dev:#a99cf0; color-scheme:dark}
+
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scrollbar-gutter:stable;scroll-padding-top:calc(var(--head-h,96px) + 12px)} /* anchor links land below the sticky menu bar: its measured height (site.js sets --head-h) plus a gap */ /* the scrollbar's space is always kept, so the centered page doesn't shift between short pages and long ones */
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.55 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:48px;padding-block:20px 48px;min-height:100vh;min-height:100dvh} /* at least the window: the footer sits at its bottom on short pages */
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--sun);outline-offset:3px}
+h1,h2,h3{font-weight:900;text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(1.8rem,5vw,2.6rem)}
+h2{font-size:1.45rem}
+p{margin:0}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:16px;top:16px;background:var(--bg);padding:6px 10px;z-index:5}
+
+/* LANGUAGES: every page carries English (.en) and Spanish (.es, lang="es"); html's lang, set in head.html from the visitor's choice
+   or their browser, picks which shows. Text with no class is the same in both */
+:root:not([lang="es"]) .es,:root[lang="es"] .en{display:none!important}
+
+/* HEADER */
+/* The menu bar: the logo at the left, the links and day/night at the right; pinned to the top while scrolling */
+.site-head{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);border-bottom:1px solid var(--line);
+  display:flex;flex-wrap:wrap;align-items:center;gap:8px 28px;padding-block:10px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+/* The logo at 1x: the lettering (184x56, a link home) with the coquí layer placed over it where it sits in the full logo */
+.bar-brand{position:relative;width:184px;height:56px;flex:none;zoom:var(--brand-zoom,1)} /* whole screen pixels per art pixel, set in head.html */
+.logo-text{display:block}
+.bar-brand img{image-rendering:pixelated;display:block}
+.coqui{position:absolute;left:122px;top:1px;padding:0;border:0;background:none;cursor:pointer;transform-origin:50% 100%}
+/* A click pets the coquí: its head is pressed down toward its feet, then springs back */
+.coqui.croak{animation:coqui-pet .45s ease-out}
+@keyframes coqui-pet{30%{transform:scale(1.1,.8)}65%{transform:scale(.97,1.05)}}
+.site-nav{display:flex;flex-wrap:wrap;gap:6px 24px;font-weight:700;margin-left:auto}
+.toolbar{display:flex;gap:8px}
+@media (max-width:620px){
+  .site-nav{order:3;flex-basis:100%;margin-left:0}
+  .toolbar{margin-left:auto}
+}
+/* The logo copy for the current theme: navy text by day, light text by night */
+:root:not([data-theme="dark"]) .night-only,:root[data-theme="dark"] .day-only{display:none!important}
+.mode{background:#2a3766;color:#fff;border:0;border-radius:6px;font:700 .82rem var(--body);display:inline-flex;align-items:center;gap:6px;padding:4px 10px;cursor:pointer} /* the same dark blue in both looks, white text, the sun or the moon on it (2026-11-04) */
+.mode img{width:calc(18px * var(--brand-zoom,1));height:calc(18px * var(--brand-zoom,1));image-rendering:pixelated} /* 9x9 pixel art at 2 px an art pixel, on whole screen pixels */
+.site-nav a{text-decoration:none}
+.site-nav a:hover{text-decoration:underline}
+.site-nav a[aria-current="page"]{color:var(--fg);text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:2px}
+
+main{display:flex;flex-direction:column;gap:48px;flex:1}
+.intro{display:flex;flex-direction:column;gap:10px}
+.intro p{font-size:1.1rem;color:var(--muted);max-width:62ch}
+/* The palm tree after "Puerto Rico." in the home title, sitting on the text baseline */
+.nowrap{white-space:nowrap}
+.palm{height:1em;width:auto;margin-left:.2em;vertical-align:-.08em;image-rendering:pixelated}
+.section{display:flex;flex-direction:column;gap:22px}
+
+/* GAME BOX: a 3D box (front, spine, top) facing the viewer; on hover it grows, turns to show its spine, bobs and rocks 6 degrees */
+.box3d{--bw:170px;--bh:228px;--bd:30px;width:var(--bw);height:calc(var(--bh) + 26px);position:relative;display:block}
+.box3d .lift{position:absolute;inset:0 0 26px 0;perspective:900px;translate:0 0;rotate:0deg}
+.box3d .box{position:absolute;inset:0;transform-style:preserve-3d;transform:none;transition:transform .3s}
+.box3d .face{position:absolute;left:0;top:0;backface-visibility:hidden;overflow:hidden;will-change:transform}
+/* The boxes keep their own compositor layers: without it Chrome re-rasterizes them in tiles while they grow, rock and bob, and
+   hairline gaps between tiles flash through as the page background */
+.box3d,.box3d .lift,.box3d .box{will-change:transform}
+.box3d .front{width:var(--bw);height:var(--bh);transform:translateZ(calc(var(--bd) / 2));border-radius:6px;transition:border-radius .3s}
+.box3d .front canvas{width:100%;height:100%;display:block;image-rendering:pixelated}
+.box3d .front img{width:100%;height:100%;display:block;object-fit:cover;max-width:none}
+.box3d .spine{width:var(--bd);height:var(--bh);left:calc((var(--bw) - var(--bd)) / 2);transform:rotateY(-90deg) translateZ(calc(var(--bw) / 2));
+  background:var(--box-dark,#333);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:8px 0;filter:brightness(.82)}
+.box3d .spine span{writing-mode:vertical-rl;transform:rotate(180deg);font:700 .7rem var(--pixel);color:#fff;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.box3d .spine i{width:12px;height:12px;background:var(--sun);display:block}
+.box3d .top{width:var(--bw);height:var(--bd);top:calc((var(--bh) - var(--bd)) / 2);transform:rotateX(90deg) translateZ(calc(var(--bh) / 2));background:var(--box-light,#666);filter:brightness(1.1)}
+.box3d .title{position:absolute;left:0;right:0;top:0;padding:7px 8px;font:700 .82rem/1.05 var(--pixel);color:#fff;text-transform:uppercase;text-align:center;
+  text-shadow:1px 1px 0 rgba(0,0,0,.55),-1px 1px 0 rgba(0,0,0,.55)}
+.box3d .floor{position:absolute;left:12%;right:4%;bottom:4px;height:14px;border-radius:50%;background:radial-gradient(closest-side,var(--shadow),transparent);transition:transform .3s,opacity .3s}
+@keyframes box-bob{0%,100%{translate:0 -4px}50%{translate:0 -14px}}
+@keyframes box-rock{0%,100%{rotate:-6deg}50%{rotate:6deg}}
+@keyframes floor-breathe{0%,100%{transform:scale(.92);opacity:.8}50%{transform:scale(.72);opacity:.5}}
+a:hover > .box3d .lift,a:focus-visible > .box3d .lift,.game-page .box3d:hover .lift{animation:box-bob 1.1s ease-in-out infinite,box-rock 2.2s ease-in-out infinite}
+a:hover > .box3d .floor,a:focus-visible > .box3d .floor,.game-page .box3d:hover .floor{animation:floor-breathe 1.1s ease-in-out infinite}
+a:hover > .box3d .box,a:focus-visible > .box3d .box,.game-page .box3d:hover .box{transform:rotateX(-6deg) rotateY(18deg)}
+/* Turned, the front meets the spine: square left corners, so no gap shows between them */
+a:hover > .box3d .front,a:focus-visible > .box3d .front,.game-page .box3d:hover .front{border-top-left-radius:0;border-bottom-left-radius:0;transition-duration:.1s}
+.box3d{transform-origin:50% 100%;transition:scale .3s}
+a:hover > .box3d,a:focus-visible > .box3d,.game-page .box3d:hover{scale:1.25;z-index:2}
+@media (prefers-reduced-motion:reduce){
+  a:hover > .box3d .lift,a:focus-visible > .box3d .lift,.game-page .box3d:hover .lift{animation:none;translate:0 -8px}
+  a:hover > .box3d .floor,.game-page .box3d:hover .floor{animation:none}
+  .box3d .box,.box3d{transition:none}
+  .coqui.croak{animation:none}
+}
+
+/* GAMES SHELF */
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:36px 20px}
+.game{display:flex;flex-direction:column;align-items:center;gap:10px;text-decoration:none;color:inherit;text-align:center}
+.game .name{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;font-weight:700;font-size:1.05rem;color:var(--accent)}
+.game:hover .name > span:first-child{text-decoration:underline}
+.game .pitch{font-size:.9rem;line-height:1.4;color:var(--muted);max-width:30ch}
+.game .kind{font-size:.82rem;color:var(--faint)}
+.tag{font-weight:700;font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;padding:1px 6px;border-radius:4px;color:var(--bg)}
+.tag.out{background:var(--tag-out)} .tag.soon{background:var(--tag-soon)} .tag.dev{background:var(--tag-dev)}
+/* Platform badges, in the text under a box on the shelf and in a game page's facts */
+.badges{display:inline-flex;flex-wrap:wrap;gap:6px;vertical-align:middle}
+.badge{font-weight:700;font-size:.7rem;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--surface);color:var(--muted);border:1px solid var(--line);white-space:nowrap}
+.game .badges{justify-content:center}
+@media (max-width:520px){
+  .shelf{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 12px}
+  .box3d{--bw:128px;--bh:172px;--bd:22px}
+  .box3d .title{font-size:.66rem;padding:5px 6px}
+  .game .pitch{display:none}
+}
+
+/* GAME PAGE */
+.back{font-weight:700;text-decoration:none;align-self:flex-start}
+.game-page{display:grid;grid-template-columns:auto minmax(0,1fr);gap:40px;align-items:start}
+.game-page .box3d{--bw:250px;--bh:334px;--bd:42px}
+.game-page .box3d .title{font-size:1.1rem;padding:10px}
+.game-body{display:flex;flex-direction:column;gap:16px;min-width:0;max-width:62ch}
+.game-body .lead{font-size:1.15rem;color:var(--muted)}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;margin:0;font-size:.95rem}
+.facts dt{color:var(--faint);font-weight:700;font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;padding-top:3px}
+.facts dd{margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:10px}
+.btn{font:700 .92rem var(--body);text-decoration:none;padding:9px 16px;border-radius:8px;border:2px solid var(--fg);color:var(--fg);background:none;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn:not(.primary):hover{background:var(--surface)}
+.game-body .small{font-size:.9rem;color:var(--muted)}
+/* The long description under the screenshots: sections, feature lists and control tables */
+.about-game{display:flex;flex-direction:column;gap:14px;margin-top:12px}
+.about-game h2{font-size:1.25rem;margin-top:10px}
+/* The pitch: the description's opening headline and paragraph, between the news and the trailer */
+.pitch{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.pitch h2{font-size:1.25rem}
+.about-game ul{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+.keys{border-collapse:collapse;width:100%;font-size:.95rem}
+.keys th,.keys td{text-align:left;padding:7px 12px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.keys thead th{color:var(--muted);font-weight:700;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase}
+.keys tbody th{font-weight:700;white-space:nowrap}
+/* A game page's news: its devlog posts, newest first (build.ps1 fills it; nothing when there are none) */
+.news{display:flex;flex-direction:column;gap:8px}
+.news h2{font-size:1.1rem}
+.news ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.news li{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:.95rem}
+.news time{color:var(--faint);font-variant-numeric:tabular-nums}
+/* The trailer: a poster with a play button, replaced by the YouTube player when clicked (site.js) */
+.trailer{aspect-ratio:16/9;border-radius:8px;overflow:hidden;background:#000;position:relative}
+.trailer iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.trailer-play{display:block;width:100%;height:100%;padding:0;border:0;background:none;cursor:pointer;position:relative}
+.trailer-play img{width:100%;height:100%;object-fit:cover;display:block;image-rendering:pixelated;transition:filter .2s}
+.trailer-play:hover img,.trailer-play:focus-visible img{filter:brightness(1.1)}
+.play-icon{position:absolute;left:50%;top:50%;width:72px;height:50px;translate:-50% -50%;border-radius:12px;background:rgba(0,0,0,.65);display:grid;place-items:center;transition:background .2s}
+.play-icon::after{content:"";border-style:solid;border-width:12px 0 12px 22px;border-color:transparent transparent transparent #fff;margin-left:4px}
+.trailer-play:hover .play-icon,.trailer-play:focus-visible .play-icon{background:var(--accent)}
+/* Screenshots: a strip three wide that scrolls sideways (swipe, trackpad or the arrows), snapping to a shot; a click opens the
+   full-size shot in the lightbox */
+.shots{position:relative}
+.shots-strip{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 20px) / 3);gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:8px}
+.shots-strip::-webkit-scrollbar{display:none}
+.shot{scroll-snap-align:start;display:block;aspect-ratio:16/9;border-radius:8px;overflow:hidden;background:#000}
+.shot img{width:100%;height:100%;object-fit:cover;display:block;transition:filter .2s}
+.shot:hover img,.shot:focus-visible img{filter:brightness(1.1)}
+.shots-arrow{position:absolute;top:50%;translate:0 -50%;width:32px;height:52px;padding:0 0 4px;border:0;border-radius:8px;background:rgba(0,0,0,.6);color:#fff;font:400 1.8rem/1 var(--body);cursor:pointer;z-index:1;transition:background .2s,opacity .2s}
+.shots-arrow.prev{left:-10px}
+.shots-arrow.next{right:-10px}
+.shots-arrow:hover,.shots-arrow:focus-visible{background:var(--accent)}
+.shots-arrow[disabled]{opacity:0;pointer-events:none}
+.shots-empty{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.shots-empty div{aspect-ratio:16/9;max-width:100%;background:repeating-linear-gradient(45deg,var(--line) 0 6px,transparent 6px 12px);border-radius:8px;display:grid;place-items:center;font-size:.72rem;color:var(--muted)}
+.lightbox{max-width:min(96vw,1920px);max-height:96vh;padding:0;border:0;border-radius:8px;background:#000;color:#fff;overflow:visible}
+.lightbox::backdrop{background:rgba(0,0,0,.85)}
+.lightbox img{display:block;max-width:min(96vw,1920px);max-height:92vh;width:auto;height:auto}
+.lightbox button{position:absolute;border:0;border-radius:8px;background:rgba(0,0,0,.6);color:#fff;cursor:pointer;font:400 1.8rem/1 var(--body);transition:background .2s}
+.lightbox button:hover,.lightbox button:focus-visible{background:var(--accent)}
+.lightbox .close{top:8px;right:8px;width:40px;height:40px;font-size:1.4rem}
+.lightbox .prev,.lightbox .next{top:50%;translate:0 -50%;width:40px;height:64px;padding:0 0 4px}
+.lightbox .prev{left:8px}
+.lightbox .next{right:8px}
+.lightbox .count{position:absolute;left:50%;bottom:8px;translate:-50% 0;padding:3px 10px;border-radius:999px;background:rgba(0,0,0,.6);font-size:.8rem}
+@media (max-width:700px){
+  .game-page{grid-template-columns:minmax(0,1fr);justify-items:center;gap:24px}
+  .game-body{justify-self:stretch}
+  .game-page .box3d{--bw:200px;--bh:268px;--bd:34px}
+  .shots-strip{grid-auto-columns:calc((100% - 6px) / 2);gap:6px}
+  .shots-arrow.prev{left:-6px}
+  .shots-arrow.next{right:-6px}
+  .shots-empty{gap:6px}
+}
+
+/* DEVLOG */
+.page-head{display:flex;flex-direction:column;gap:8px;max-width:62ch}
+.page-head p{font-size:1.05rem;color:var(--muted)}
+.posts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.posts li{border-bottom:1px solid var(--line)}
+.posts a{display:grid;grid-template-columns:7.5rem minmax(0,1fr);gap:4px 20px;padding:18px 0;text-decoration:none;color:var(--fg)}
+.posts a:hover h3{text-decoration:underline}
+.posts time{color:var(--faint);font-size:.85rem;font-variant-numeric:tabular-nums;padding-top:4px}
+.posts .pb{display:flex;flex-direction:column;gap:4px;min-width:0}
+.posts h3{font-size:1.25rem;color:var(--accent);font-weight:700}
+.posts p{color:var(--muted)}
+.gtag{font-weight:700;font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;color:var(--faint)}
+.post{display:flex;flex-direction:column;gap:18px;max-width:65ch}
+.post .meta{display:flex;flex-wrap:wrap;gap:8px;font-size:.85rem;color:var(--faint)}
+.post p{font-size:1.05rem}
+.post h2{margin-top:10px}
+.post ul{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:8px;font-size:1.05rem}
+.post code{font-size:.92em;background:var(--surface);padding:1px 5px;border-radius:5px;overflow-wrap:anywhere}
+.compare{border-collapse:collapse;width:100%;font-size:.98rem;font-variant-numeric:tabular-nums}
+.compare th,.compare td{text-align:left;padding:8px 12px 8px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.compare thead th{color:var(--muted);font-weight:700}
+.compare tbody th{font-weight:700;white-space:nowrap}
+.compare td:last-child{color:var(--accent);font-weight:700}
+@media (max-width:520px){.posts a{grid-template-columns:1fr}}
+
+/* ABOUT */
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:36px}
+.col{display:flex;flex-direction:column;gap:36px;min-width:0}
+.block{display:flex;flex-direction:column;gap:12px;max-width:62ch;min-width:0}
+.note{font-size:.85rem;color:var(--faint)}
+.press{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.press li{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:.92rem}
+.press span{color:var(--faint);font-size:.8rem}
+.mail code{user-select:all;font-size:.95rem}
+
+.sr{position:absolute;left:-9999px}
+
+footer{display:flex;flex-direction:column;gap:12px;font-size:.85rem;color:var(--faint);border-top:1px solid var(--line);padding-top:16px}
+.foot-row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+footer nav{display:flex;flex-wrap:wrap;gap:6px 16px}
+/* Where else to find the studio */
+.social a{text-decoration:none;font-weight:700}
+.social a:hover{text-decoration:underline}
+
+/* PRESS KIT (press.html): facts, logos, one section per game */
+.kit{display:flex;flex-direction:column;gap:44px;max-width:72ch}
+.kit .block{max-width:none}
+.kit .lead{font-size:1.15rem;color:var(--muted)}
+.kit .features{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+.kit-game{display:flex;flex-direction:column;gap:14px;padding-top:36px;border-top:1px solid var(--line)}
+.kit-game h2{font-size:1.4rem}
+.logo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.logo-grid figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:22px 18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.logo-grid img{image-rendering:pixelated;max-width:100%;height:auto} /* the 1x files shown at 2x */
+.logo-grid figcaption{font-size:.8rem;color:#555;text-align:center}
+.todo{background:#ffd54a;color:#3a2a00;font:700 .68rem var(--body);padding:1px 6px;border-radius:4px;letter-spacing:.04em;text-transform:uppercase;vertical-align:middle} /* a draft's blank or unverified fact */
+
+
+/* ===== THE CENTERED LOOK (chosen 2026-11-03; formerly css/centered.css, loaded after the rules above, so these override them.
+   The first look is archived in archive/first-look) ===== */
+/* CENTERED (2026-11-01): the look chosen on 2026-11-03, after Marketing/test-page-2025/test.html: the logo big and centered at the top with the
+   menu under it, Fredoka for the text, the home page centered with the games as rounded capsules, a dark footer with the links
+   centered. Written as overrides of the rules above (a separate stylesheet loaded after them until the merge) */
+@font-face{font-family:"Fredoka";font-style:normal;font-weight:300 700;font-display:swap;src:url(../fonts/fredoka-300-700.woff2) format("woff2")}
+
+:root{--body:"Fredoka",system-ui,-apple-system,"Segoe UI",sans-serif;--fg:#23225a;--radius:15px}
+:root[data-theme="dark"]{--fg:#e4eaff}
+html{overflow-x:clip;scroll-padding-top:12px} /* the menu bar isn't pinned here, so anchors need no room for it; clip: the running Chupacabras leaves at the right */
+body{font-size:18px}
+h1,h2,h3{font-weight:600}
+.wrap{max-width:none;gap:40px;padding-block:0} /* as wide as the body, so the dark footer can reach the window's edges; no bottom padding, it meets the bottom too */
+.site-head,main{width:100%;max-width:1360px;margin-inline:auto} /* the content's block: four boxes in a row */
+:root{--edge-l:max(16px,env(safe-area-inset-left,0px));--edge-r:max(16px,env(safe-area-inset-right,0px))} /* the body's side padding (style.css), undone by the footer */
+
+/* HEADER: the logo centered at 3x (2x, then 1x, as the screen narrows), the menu under the logo; not pinned while scrolling.
+   The Day/Night button sits at the top right corner of the page, out of the flow (two looks here: light and dark) */
+.site-head{position:static;flex-direction:column;align-items:center;gap:22px;padding:34px 0 6px;border-bottom:0}
+.bar-brand{zoom:calc(var(--brand-zoom,1) * 3)} /* whole screen pixels per art pixel, as the base's 1x logo */
+@media (max-width:1000px){.bar-brand{zoom:calc(var(--brand-zoom,1) * 2)}}
+@media (max-width:600px){.bar-brand{zoom:var(--brand-zoom,1)}}
+.site-nav{margin:0;justify-content:center;gap:8px 36px;font-size:1.2rem;font-weight:600}
+@media (max-width:620px){.site-nav{order:0;flex-basis:auto}}
+
+/* HOME: the headline and its line at the left, the games centered */
+[data-page="games"] main{align-items:center;text-align:center}
+.intro{align-self:stretch;width:100%;max-width:1024px;margin-inline:auto;align-items:flex-start;text-align:left} /* the same block as the hello paragraph, so their left edges line up */
+.intro p{font-size:1.2rem}
+/* The 2025 page's hello paragraph between the headline and the games: a centered block, the text at the left, as it was (24px, 1024 wide there) */
+.hello{align-self:stretch;width:100%;max-width:1024px;margin-inline:auto;text-align:left}
+.hello p{font-size:1.2rem;margin:0}
+.hello a{color:var(--fg);font-weight:600}
+
+/* ABOUT and DEVLOG (pages/about.html and devlog.html here): one column, the same 1024 block as the home page's text, the blocks as wide as it */
+.single{width:100%;max-width:1024px;margin-inline:auto;display:flex;flex-direction:column;gap:40px;text-align:left}
+.single .page-head,.single .block{max-width:none}
+.single .block p{font-size:1.1rem}
+.single .block a{color:var(--fg);font-weight:600}
+.single .page-head p{font-size:1.1rem}
+/* A devlog entry: the title is the link, the date and game under it, then the summary */
+.single .entry{gap:6px}
+.single .entry h2 a{text-decoration:none}
+.single .entry h2 a:hover{text-decoration:underline}
+.single .entry .when{font-size:.95rem;color:var(--faint)}
+/* DEVLOG POSTS (the shared pages, styled here): the same 1024 block, the back link, the title, then the date and game as a faint line */
+.post{width:100%;max-width:1024px;margin-inline:auto;gap:16px}
+.post .back{order:-2}
+.post h1{order:-1}
+.post .meta{display:flex;flex-direction:row-reverse;justify-content:flex-end;gap:0;font-size:.95rem;color:var(--faint)}
+.post .gtag{font:inherit;letter-spacing:0;text-transform:none;color:inherit}
+.post .gtag::before{content:" · ";white-space:pre}
+.post p,.post ul{font-size:1.1rem}
+.post a:not(.back){color:var(--fg);font-weight:600}
+/* GAME PAGES (the shared pages, styled here; layout 1 of 2026-11-03, after the first look's top): the box art at the left with the
+   title, lead, facts, buttons, note and news beside it, no frame; the pitch, trailer, screenshots and the long description run the
+   full width under that row. The body's children join the page's grid (display:contents) so the box can sit beside them: rows 1-6
+   the box beside the title and the five info blocks, row 7 a spacer that takes the box's extra height, the rest below */
+[data-page="games"] main:has(.game-page){align-items:stretch;text-align:left}
+[data-page="games"] main:has(.game-page) > .back,.game-page{width:100%;max-width:1024px;margin-inline:auto}
+.game-page{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:repeat(6,auto) 1fr;gap:16px 40px;align-items:start}
+.game-body{display:contents}
+.game-page .box3d{grid-area:1/1/8/2}
+.game-body h1{grid-area:1/2;font-size:2.4rem;line-height:1.1}
+.game-body > div:has(.tag){grid-area:1/2;justify-self:end;align-self:center} /* the coming-soon tag, at the right end of the title row */
+.game-body > :is(.lead,.facts,.btns,.small,.news){grid-column:2} /* each in its own row, so a page without one keeps the others in place */
+.game-body .lead{grid-row:2}.game-body .facts{grid-row:3}.game-body .btns{grid-row:4}.game-body .small{grid-row:5}.game-body .news{grid-row:6}
+.game-body > :is(.pitch,.trailer,.shots,.shots-empty,.about-game){grid-column:1/-1}
+.game-body > :is(.pitch,.trailer,.shots,.shots-empty,.about-game){margin-top:36px}
+.game-body > :is(.pitch,.trailer,.shots,.shots-empty,.about-game) ~ :is(.pitch,.trailer,.shots,.shots-empty,.about-game){margin-top:0}
+.game-body .lead{font-size:1.25rem}
+.facts{gap:4px 14px;font-size:1rem}
+.facts dt{font:inherit;font-weight:600;letter-spacing:0;text-transform:none;padding-top:0;color:var(--faint)}
+.pitch p,.about-game p,.about-game ul{font-size:1.1rem}
+.pitch a,.about-game a{color:var(--fg);font-weight:600}
+@media (max-width:700px){
+  .game-page{grid-template-columns:minmax(0,1fr);grid-template-rows:none;justify-items:stretch;gap:16px}
+  .game-page .box3d{grid-area:1/1/2/2;justify-self:center}
+  .game-body h1{grid-area:2/1}
+  .game-body > :is(.lead,.facts,.btns,.small,.news),.game-body > div:has(.tag){grid-column:1}
+  .game-body > div:has(.tag){grid-row:2}
+  .game-body .lead{grid-row:3}.game-body .facts{grid-row:4}.game-body .btns{grid-row:5}.game-body .small{grid-row:6}.game-body .news{grid-row:7}
+}
+.section{align-items:center;width:100%}
+/* The shared 3D boxes, a size up, in a centered row that wraps (the base's grid leaves a short row at the left) */
+.shelf{display:flex;flex-wrap:wrap;justify-content:center;gap:36px 44px}
+.shelf .box3d{--bw:200px;--bh:268px;--bd:34px}
+.game{width:200px}
+.game .name{font-weight:600;font-size:1.2rem;color:var(--fg);margin-top:6px}
+.game .when{color:var(--faint);font-weight:400}
+@media (max-width:520px){.shelf{gap:28px 24px}.shelf .box3d{--bw:140px;--bh:188px;--bd:24px}.game{width:140px}}
+
+/* FOOTER: dark, the full width of the page, the links centered. The scrollbar's space isn't kept here as style.css keeps it: on a page
+   too short to scroll that space is an empty strip in the page color beside the dark footer, and nothing can paint it. Instead, on a page
+   that scrolls, the body gets a left padding as wide as the scrollbar (100vw counts the scrollbar, the html element's 100% doesn't), so
+   the content stays centered in the window as on a short page, and the footer's left margin undoes that padding along with the body's
+   own: seen from the footer, the scrollbar's width is half of what the window has over the wrapper plus the two side paddings (the
+   wrapper must keep no side padding of its own), and the footer's left padding carries the scrollbar's width too, so its centered
+   rows stay centered in the window; --sb holds that width (its 100% is the wrapper's width in the footer and, by the same arithmetic,
+   in the game strip). The Day/Night button still moves with the scrollbar (to fix later) */
+html{scrollbar-gutter:auto}
+body{padding-left:calc(100vw - 100% + var(--edge-l))}
+:root{--foot-bg:#15162e}
+:root[data-theme="dark"]{--foot-bg:#080c1f}
+footer{--sb:calc((100vw - 100% - var(--edge-l) - var(--edge-r)) / 2);margin-left:calc(-1 * (var(--sb) + var(--edge-l)));margin-right:calc(-1 * var(--edge-r));padding:calc(28px + var(--snap,0px)) var(--edge-r) 32px calc(var(--sb) + var(--edge-l));background:var(--foot-bg);color:#c9cde8;border-top:0;align-items:center;text-align:center;gap:16px;font-size:.95rem;line-height:24px}
+/* Whole-pixel rows (24 and 26 px lines, 126 px in all) and a document a whole number of screen pixels tall (--snap, the fraction left
+   over, measured by site.js, added above the rows so their distances to the bottom edge stay whole): with fractions, the browser rounds the scroll range and the footer lands up to half a pixel off the
+   window's bottom edge, so its text snapped to a different pixel from page to page */
+footer a{color:#fff}
+/* The Chupacabras runs along the footer's top edge, left to right, over and over: the game's four side-facing frames
+   (img/chupacabras-run.png, from sprite_Player1_strip12 frames 8-11 with the 1 px 8-way border baked around them: 18x18) at 3x,
+   4 frames every 0.4 s as in the game.
+   It's a button (it stops when pointed at, so it can be caught) that opens Chupacabras Run, the minigame styled below */
+footer{position:relative}
+main{padding-bottom:32px} /* room under the last text for the running Chupacabras (54 px tall, above the footer), with the 40 px gap before the footer */
+.chupa{position:absolute;left:0;bottom:100%;width:54px;height:54px;border:0;padding:0;cursor:pointer;background:url(../img/chupacabras-run.png) 0 0/216px 54px no-repeat;image-rendering:pixelated;
+  animation:chupa-frames .4s steps(4) infinite,chupa-across 16s linear infinite}
+.chupa:hover,.chupa:focus-visible{animation-play-state:paused}
+.chupa:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@keyframes chupa-frames{to{background-position:-216px 0}}
+@keyframes chupa-across{from{transform:translateX(-54px)}to{transform:translateX(100vw)}}
+@media (prefers-reduced-motion:reduce){.chupa{animation:none;left:16px}}
+/* Chupacabras Run: a strip at the top of the footer, the full width of the page, in the game's night colors; the canvas is sized
+   by the script (3 page pixels per game pixel, on whole screen pixels), the title, score and hint sit over it */
+.cg{position:relative;align-self:stretch;display:flex;justify-content:center;margin:calc(-28px - var(--snap,0px)) calc(-1 * var(--edge-r)) 0 calc(-1 * (var(--sb) + var(--edge-l)));background:#080c1f;overflow:hidden}
+.cg[hidden]{display:none}
+#cg-canvas{display:block;image-rendering:pixelated;touch-action:manipulation;cursor:pointer;outline:0}
+.cg-top{position:absolute;top:10px;left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:12px;font-weight:600;font-size:1.1rem;color:#fff;pointer-events:none}
+.cg-score{margin-left:auto;font-variant-numeric:tabular-nums;color:#c9cde8;font-weight:500}
+.cg-close{pointer-events:auto;background:none;border:0;color:#fff;font:inherit;font-size:1.6rem;line-height:1;padding:0 4px;cursor:pointer}
+.cg-hint{position:absolute;left:0;right:0;bottom:5px;margin:0;font-size:.9rem;color:#c9cde8;text-align:center;pointer-events:none}
+.foot-row{justify-content:center;gap:12px 28px}
+footer nav{justify-content:center}
+.social{gap:8px 28px;font-size:1.05rem;line-height:26px}
+
+/* The Day/Night button at the page's top right corner, over the header */
+.toolbar{position:absolute;top:18px;right:max(18px,env(safe-area-inset-right,0px));margin:0}
+
+/* PRESS KIT (the shared page, styled here): the same 1024 block, no rules between the sections or in the download lists,
+   the file lists as lines with the format after the link, the e-mail as plain text */
+[data-page="press"] .page-head,.kit{width:100%;max-width:1024px;margin-inline:auto}
+[data-page="press"] .page-head p{font-size:1.1rem}
+.kit{gap:48px}
+.kit p,.kit .features,.kit .facts{font-size:1.1rem}
+.kit .lead{font-size:1.25rem}
+.kit a{color:var(--fg);font-weight:600}
+.kit-game{border-top:0;padding-top:0;gap:16px}
+.kit-game h2{font-size:1.6rem}
+.press{border-top:0;gap:4px}
+.press li{border-bottom:0;padding:0;justify-content:flex-start;align-items:baseline;gap:10px;font-size:1.1rem}
+.press span{font-size:.95rem}
+[data-page="press"] code{font:inherit;background:none;padding:0}
+
+/* The social links' marks (2026-11-03): Simple Icons inline, in brand colors, beside the names */
+.social a{display:inline-flex;align-items:center;gap:7px}
+.social .ico{flex:none;width:18px;height:18px}

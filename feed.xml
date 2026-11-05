@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>Coquibyte Games devlog</title>
+  <link>https://coquibytegames.com/devlog.html</link>
+  <atom:link href="https://coquibytegames.com/feed.xml" rel="self" type="application/rss+xml"/>
+  <description>Notes from the Coquibyte Games workbench, tools, design decisions and what's next.</description>
+  <language>en</language>
+  <item>
+    <title>Vieques 2.0.0: rebuilt from scratch, 5 times smaller</title>
+    <link>https://coquibytegames.com/devlog/vieques-2-0-0.html</link>
+    <guid>https://coquibytegames.com/devlog/vieques-2-0-0.html</guid>
+    <pubDate>Tue, 27 Oct 2026 12:00:00 GMT</pubDate>
+    <description>Vieques rebuilt from scratch in C++ with raylib: the same game, 5 times smaller, with new controls and fixes.</description>
+  </item>
+  <item>
+    <title>Chupacabras 3.0.0: rebuilt from scratch, 8 times smaller</title>
+    <link>https://coquibytegames.com/devlog/chupacabras-3-0-0.html</link>
+    <guid>https://coquibytegames.com/devlog/chupacabras-3-0-0.html</guid>
+    <pubDate>Mon, 26 Oct 2026 12:00:00 GMT</pubDate>
+    <description>Chupacabras rebuilt from scratch in C++ with raylib: the same game, 8 times smaller, with new controls and fixes.</description>
+  </item>
+</channel>
+</rss>
