@@ -366,7 +366,9 @@ h1,h2,h3{font-weight:600}
 .game{width:200px}
 .game .name{font-weight:600;font-size:1.2rem;color:var(--fg);margin-top:6px}
 .game .when{color:var(--faint);font-weight:400}
-@media (max-width:520px){.shelf{gap:28px 24px}.shelf .box3d{--bw:140px;--bh:188px;--bd:24px}.game{width:140px}}
+/* A name longer than its box ("Chupacabras (for GBA)") stays on one line, a little wider than the box, and its year goes under it */
+.game .name > span:first-child{white-space:nowrap}
+@media (max-width:520px){.shelf{gap:28px 24px}.shelf .box3d{--bw:140px;--bh:188px;--bd:24px}.game{width:140px}.game .name > span:first-child{white-space:normal}}
 
 /* FOOTER: dark, the full width of the page, the links centered. The scrollbar's space isn't kept here as style.css keeps it: on a page
    too short to scroll that space is an empty strip in the page color beside the dark footer, and nothing can paint it. Instead, on a page

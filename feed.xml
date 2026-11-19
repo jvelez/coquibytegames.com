@@ -7,6 +7,13 @@
   <description>Notes from the Coquibyte Games workbench, tools, design decisions and what's next.</description>
   <language>en</language>
   <item>
+    <title>Chupacabras (for GBA): the whole game on a Game Boy Advance</title>
+    <link>https://coquibytegames.com/devlog/chupacabras-gba-1-0-0.html</link>
+    <guid>https://coquibytegames.com/devlog/chupacabras-gba-1-0-0.html</guid>
+    <pubDate>Wed, 18 Nov 2026 12:00:00 GMT</pubDate>
+    <description>Chupacabras now runs on a real Game Boy Advance. The whole game as a ROM file, how it got there and what&#39;s different from the Windows version.</description>
+  </item>
+  <item>
     <title>Vieques 2.0.0: rebuilt from scratch, 5 times smaller</title>
     <link>https://coquibytegames.com/devlog/vieques-2-0-0.html</link>
     <guid>https://coquibytegames.com/devlog/vieques-2-0-0.html</guid>
